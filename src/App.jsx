@@ -4,6 +4,7 @@ export default function App() {
   const [total, setTotal] = useState(0);
   const [expression, setExpression] = useState('0');
   const [storeNum, setStoreNum] = useState(0);
+  const [storeOps, setStoreOps] = useState("");
 
   function handleData(data) {
     if (!isNaN(data)) {
@@ -12,10 +13,17 @@ export default function App() {
         prevExpression === '0' ? data : prevExpression + data
       );
     } else if (data === "=") {
-      setTotal(storeNum + total);
-      setExpression((storeNum + total).toString());
+      const result = calculations(storeOps, storeNum, total);
+      setExpression(result.toString());
+      setTotal(result);
+    } else if (data === "C") {
+      setTotal(0);
+      setExpression('0');
+      setStoreNum(0);
+      setStoreOps("");
     } else {
       setStoreNum(total);
+      setStoreOps(data);
       setExpression(total + " " + data + " ");
       setTotal(0);
     }
@@ -36,31 +44,35 @@ export default function App() {
         <Buttons value='4' onButtonClick={() => handleData('4')} />
         <Buttons value='5' onButtonClick={() => handleData('5')} />
         <Buttons value='6' onButtonClick={() => handleData('6')} />
-        <Buttons value='-'/>
+        <Buttons value='-' onButtonClick={() => handleData('-')} />
       </div>
       <div className="calc-row">
         <Buttons value='1' onButtonClick={() => handleData('1')} />
         <Buttons value='2' onButtonClick={() => handleData('2')} />
         <Buttons value='3' onButtonClick={() => handleData('3')} />
-        <Buttons value='x'/>
+        <Buttons value='x' onButtonClick={() => handleData('*')} />
       </div>
       <div className="calc-row">
-        <Buttons value='C'/>
+        <Buttons value='C' onButtonClick={() => handleData('C')} />
         <Buttons value='0' onButtonClick={() => handleData('0')} />
         <Buttons value='=' onButtonClick={() => handleData('=')} />
-        <Buttons value='/'/>
+        <Buttons value='/' onButtonClick={() => handleData('/')} />
       </div>
     </>
   );
 }
 
-function Calculate({ data, storeNum, total, setExpression, setTotal, expression }) {
-
-  if (data === "+") {
-    setTotal(storeNum + total);
-    setExpression(() => total.toString());
+function calculations(storeOps, storeNum, total) {
+  switch (storeOps) {
+    case '+':
+      return storeNum + total;
+    case '-':
+      return storeNum - total;
+    case '*':
+      return storeNum * total;
+    case '/':
+      return storeNum / total;
   }
-
   return null;
 }
 
