@@ -13,19 +13,19 @@ export default function App() {
         prevExpression === '0' ? data : prevExpression + data
       );
     } else if (data === "=") {
-      const result = calculations(storeOps, storeNum, total);
-      setExpression(result.toString());
-      setTotal(result);
+        const result = calculations(storeOps, storeNum, total);
+        setExpression(result.toString());
+        setTotal(result);
     } else if (data === "C") {
-      setTotal(0);
-      setExpression('0');
-      setStoreNum(0);
-      setStoreOps("");
+        setTotal(0);
+        setExpression('0');
+        setStoreNum(0);
+        setStoreOps("");
     } else {
-      setStoreNum(total);
-      setStoreOps(data);
-      setExpression(total + " " + data + " ");
-      setTotal(0);
+        setStoreNum(total);
+        setStoreOps(data);
+        setExpression(total + " " + data + " ");
+        setTotal(0);
     }
   }
 
@@ -34,6 +34,34 @@ export default function App() {
       <div className="total">
         {expression}
       </div>
+      <Layout handleData={handleData} />
+    </>
+  );
+}
+
+function calculations(storeOps, storeNum, total) {
+  switch (storeOps) {
+    case '+':
+      return storeNum + total;
+    case '-':
+      return storeNum - total;
+    case '*':
+      return storeNum * total;
+    case '/':
+      return storeNum / total;
+  }
+  return null;
+}
+
+function Buttons({ value, onButtonClick }) {
+  return <button className="buttons" onClick={() => onButtonClick(value)}>
+    {value}
+  </button>
+}
+
+function Layout({ handleData }) {
+  return (
+    <>
       <div className="calc-row">
         <Buttons value='7' onButtonClick={() => handleData('7')} />
         <Buttons value='8' onButtonClick={() => handleData('8')} />
@@ -60,24 +88,4 @@ export default function App() {
       </div>
     </>
   );
-}
-
-function calculations(storeOps, storeNum, total) {
-  switch (storeOps) {
-    case '+':
-      return storeNum + total;
-    case '-':
-      return storeNum - total;
-    case '*':
-      return storeNum * total;
-    case '/':
-      return storeNum / total;
-  }
-  return null;
-}
-
-function Buttons({ value, onButtonClick }) {
-  return <button className="buttons" onClick={() => onButtonClick(value)}>
-    {value}
-  </button>
 }
